@@ -6,17 +6,16 @@
         <text class="iconfont icon_xinhao">&#xe61f;</text>
         <text class="iconfont icon_wifi">&#xe627;</text>
         <view class="icon_dian" :style="{ borderColor: textColor }">
-          <view
-            class="dian_right"
-            :style="{ backgroundColor: textColor }"
-          ></view>
+          <view class="dian_right" :style="{ backgroundColor: textColor }"></view>
           <view
             class="mask"
-            :style="{ width: pageData.dian + '%', backgroundColor: textColor }"
+            :style="{
+              width: pageData.dian + '%',
+              backgroundColor: pageData.dian <= 20 ? '#ff3b30' : pageData.dian <= 50 ? '#ff9500' : textColor
+            }"
           ></view>
+          <text class="dian_num" :style="{ color: pageData.dian <= 20 ? '#fff' : textColor }">{{ pageData.dian }}</text>
         </view>
-        <text class="nav_num">{{ pageData.dian }}</text>
-        <text class="nav_bai">%</text>
       </view>
     </view>
     <view class="bar">
@@ -106,40 +105,45 @@ export default {
     }
 
     .icon_dian {
-      width: 38upx;
-      height: 22upx;
+      width: 72upx;
+      height: 28upx;
       box-sizing: border-box;
-      display: inline-block;
-      border: 3upx solid #333;
-      border-radius: 6upx;
-      padding: 2upx;
-      margin-right: 10upx;
+      display: inline-flex;
+      align-items: center;
+      border: 2upx solid #333;
+      border-radius: 5upx;
+      padding: 3upx;
+      margin-right: 6upx;
       position: relative;
       top: 2upx;
 
       .dian_right {
         position: absolute;
-        top: 24%;
-        right: -20%;
-        width: 4upx;
-        height: 10upx;
+        top: 50%;
+        right: -5upx;
+        transform: translateY(-50%);
+        width: 3upx;
+        height: 12upx;
+        border-radius: 0 2upx 2upx 0;
       }
 
       .mask {
-        height: 100%;
+        position: absolute;
+        left: 3upx;
+        top: 3upx;
+        bottom: 3upx;
+        border-radius: 3upx;
+        transition: width 0.3s ease, background-color 0.3s ease;
       }
-    }
 
-    .nav_num {
-      font-size: 24upx;
-      font-weight: 500;
-      margin-right: 2upx;
-    }
-
-    .nav_bai {
-      font-size: 16upx;
-      font-weight: 900;
-      margin-top: 6upx;
+      .dian_num {
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        font-size: 16upx;
+        font-weight: 900;
+        z-index: 1;
+      }
     }
   }
 
