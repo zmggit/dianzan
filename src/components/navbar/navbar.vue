@@ -5,10 +5,14 @@
       <text class="time">{{ pageData.navbarTime || '18:05' }}</text>
       
       <view class="status-right">
-        <!-- 信号图标 (建议替换为更贴近iOS的字体图标) -->
-        <text class="iconfont icon_xinhao">&#xe61f;</text>
-        <text class="nav_5g" :style="{ color: textColor }">5G</text>
-        <text class="iconfont icon_wifi">&#xe627;</text>
+          <text class="iconfont icon_xinhao">&#xe61f;</text>
+        <!-- 有 wifi 显示 wifi，否则显示 5G -->
+        <template v-if="pageData.isWifi">
+          <text class="iconfont icon_wifi">&#xe627;</text>
+        </template>
+        <template v-else>
+          <text class="nav_5g" :style="{ color: textColor }">5G</text>
+        </template>
         
         <!-- 优化后的电池图标 -->
         <view class="battery-box" :style="{ borderColor: textColor }">
