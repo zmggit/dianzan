@@ -1,31 +1,50 @@
 <template>
   <view class="navbar" :style="{ backgroundColor: bgColor, color: textColor }">
-    <view class="nav">
-      <text class="nav_time">{{ pageData.navbarTime }}</text>
-      <view class="nav_right">
+    <!-- 模拟系统状态栏 (刘海/灵动岛区域) -->
+    <view class="status-bar">
+      <text class="time">{{ pageData.navbarTime || '18:05' }}</text>
+      
+      <view class="status-right">
+        <!-- 信号图标 (建议替换为更贴近iOS的字体图标) -->
         <text class="iconfont icon_xinhao">&#xe61f;</text>
+        <text class="nav_5g" :style="{ color: textColor }">5G</text>
         <text class="iconfont icon_wifi">&#xe627;</text>
-        <view class="icon_dian" :style="{ borderColor: textColor }">
-          <view class="dian_right" :style="{ backgroundColor: textColor }"></view>
+        
+        <!-- 优化后的电池图标 -->
+        <view class="battery-box" :style="{ borderColor: textColor }">
+          <!-- 电池右侧的凸起小头 -->
+          <view class="battery-nub" :style="{ backgroundColor: textColor }"></view>
+          <!-- 电池容量填充 -->
           <view
-            class="mask"
+            class="battery-fill"
             :style="{
-              width: pageData.dian + '%',
-              backgroundColor: pageData.dian <= 20 ? '#ff3b30' : pageData.dian <= 50 ? '#ff9500' : textColor
+              width: (pageData.dian || 68) + '%',
+              backgroundColor: (pageData.dian || 68) <= 20 ? '#ff3b30' : textColor
             }"
           ></view>
-          <text class="dian_num" :style="{ color: pageData.dian <= 20 ? '#fff' : textColor }">{{ pageData.dian }}</text>
+          <!-- 电池数字 -->
+          <text 
+            class="battery-num" 
+            :style="{ color: bgColor }"
+          >{{ pageData.dian || 68 }}</text>
         </view>
       </view>
     </view>
-    <view class="bar">
-      <text class="iconfont icon_left" @tap="back">&#xe60a;</text>
-      <text class="bar_text">{{
-        ismain
-          ? pageData.article.date.date + "  " + pageData.article.date.time
-          : "详情"
-      }}</text>
-      <text class="iconfont icon_right" @tap="handleRight">&#xf0141;</text>
+
+    <!-- 微信导航栏 -->
+    <view class="nav-bar">
+      <view class="nav-left" @tap="back">
+        <text class="iconfont icon_left">&#xe60a;</text>
+      </view>
+      
+      <!-- 使用绝对定位保证标题永远居中 -->
+      <view class="nav-title">
+        <text>{{ ismain ? pageData.article.date.date + " " + pageData.article.date.time : "详情" }}</text>
+      </view>
+      
+      <view class="nav-right" @tap="handleRight">
+        <text class="iconfont icon_right">&#xf0141;</text>
+      </view>
     </view>
   </view>
 </template>
@@ -36,7 +55,10 @@ export default {
   props: {
     pageData: {
       type: Object,
-      default: {},
+      default: () => ({
+        navbarTime: '18:05',
+        dian: 68
+      }),
     },
     bgColor: {
       type: String,
@@ -44,7 +66,7 @@ export default {
     },
     textColor: {
       type: String,
-      default: "#333",
+      default: "#000000", // iOS标准状态栏通常是纯黑
     },
     ismain: {
       type: Boolean,
@@ -68,110 +90,143 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .navbar {
-  .nav {
+  width: 100%;
+  box-sizing: border-box;
+  /* 增加顶部 padding 模拟 iOS 灵动岛/刘海的安全距离 */
+  padding-top: 80rpx; 
+  position: relative;
+  z-index: 99;
+
+  /* --- 模拟系统状态栏 --- */
+  .status-bar {
     width: 100%;
-    height: 60upx;
-    box-sizing: border-box;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    padding: 0 40upx;
-
-    .nav_time {
-      font-size: 24upx;
-      font-weight: 900;
-      margin-bottom: 2upx;
-    }
-
-    .nav_right {
-      display: flex;
-      align-items: center;
-    }
-
-    .icon_xinhao {
-      font-size: 24upx;
-      margin-right: 12upx;
-      font-weight: 900;
-    }
-
-    .icon_wifi {
-      font-size: 34upx;
-      margin-right: 6upx;
-      vertical-align: middle;
-      position: relative;
-      top: 0;
-    }
-
-    .icon_dian {
-      width: 72upx;
-      height: 28upx;
-      box-sizing: border-box;
-      display: inline-flex;
-      align-items: center;
-      border: 2upx solid #333;
-      border-radius: 5upx;
-      padding: 3upx;
-      margin-right: 6upx;
-      position: relative;
-      top: 2upx;
-
-      .dian_right {
-        position: absolute;
-        top: 50%;
-        right: -5upx;
-        transform: translateY(-50%);
-        width: 3upx;
-        height: 12upx;
-        border-radius: 0 2upx 2upx 0;
-      }
-
-      .mask {
-        position: absolute;
-        left: 3upx;
-        top: 3upx;
-        bottom: 3upx;
-        border-radius: 3upx;
-        transition: width 0.3s ease, background-color 0.3s ease;
-      }
-
-      .dian_num {
-        position: absolute;
-        width: 100%;
-        text-align: center;
-        font-size: 16upx;
-        font-weight: 900;
-        z-index: 1;
-      }
-    }
-  }
-
-  .bar {
-    width: 100%;
-    height: 80upx;
+    height: 44rpx;
     box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-left: 20upx;
-    padding-right: 50upx;
+    padding: 0 40rpx;
+    margin-bottom: 20rpx;
 
-    .bar_text {
-      font-size: 32upx;
-      font-weight: 700;
-      letter-spacing: 2upx;
-      margin-bottom: 8upx;
+    .time {
+      font-size: 32rpx;
+      font-weight: 600;
+      letter-spacing: 1rpx;
+      font-family: -apple-system, Helvetica, sans-serif; /* 尽量逼近苹方/SF字体 */
     }
 
-    .icon_left {
-      font-size: 40upx;
-      font-weight: 800;
+    .status-right {
+      display: flex;
+      align-items: center;
+      gap: 12rpx; /* 图标之间的间距 */
+
+      .icon_xinhao {
+        font-size: 26rpx;
+      }
+      
+      .nav_5g {
+        font-size: 22rpx;
+        font-weight: 600;
+      }
+
+      .icon_wifi {
+        font-size: 32rpx;
+      }
+
+      /* 极致还原的 iOS 电池样式 */
+      .battery-box {
+        width: 52rpx;
+        height: 26rpx;
+        box-sizing: border-box;
+        border: 2rpx solid;
+        border-radius: 8rpx; /* 更圆润 */
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 4rpx;
+
+        .battery-nub {
+          position: absolute;
+          right: -6rpx;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 4rpx;
+          height: 10rpx;
+          border-radius: 0 3rpx 3rpx 0;
+          opacity: 0.6;
+        }
+
+        .battery-fill {
+          position: absolute;
+          left: 2rpx;
+          top: 2rpx;
+          bottom: 2rpx;
+          border-radius: 4rpx;
+          transition: width 0.3s ease;
+        }
+
+        .battery-num {
+          position: relative;
+          z-index: 2;
+          font-size: 20rpx;
+          font-weight: 700;
+          transform: scale(0.9); /* 缩小数字使其完美塞入电池 */
+          /* iOS 真实效果是数字把背景掏空，这里为了兼容性使用与背景同色的文字盖在上面 */
+        }
+      }
+    }
+  }
+
+  /* --- 微信导航栏 --- */
+  .nav-bar {
+    width: 100%;
+    height: 88rpx; /* 标准导航栏高度 */
+    position: relative; /* 为绝对居中的标题做准备 */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30rpx;
+    box-sizing: border-box;
+
+    .nav-left {
+      width: 80rpx;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      .icon_left {
+        font-size: 44rpx;
+        font-weight: 500;
+      }
     }
 
-    .icon_right {
-      font-weight: 800;
-      font-size: 35upx;
+    /* 标题绝对居中 */
+    .nav-title {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 34rpx;
+      font-weight: 500;
+      letter-spacing: 2rpx;
+      max-width: 50%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .nav-right {
+      width: 80rpx;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      .icon_right {
+        font-size: 40rpx;
+        font-weight: 600;
+      }
     }
   }
 }
