@@ -80,6 +80,14 @@
         :finish="status.item2"
       />
       <edit-item
+        title="是否开启顶部wife"
+        icon="good"
+        type="switch"
+        @switchValue="switchWifeValue"
+        :finish="status.item2"
+      />
+
+      <edit-item
         v-if="pageData.navbar"
         :max="100"
         title="顶部导航电量"
@@ -115,6 +123,7 @@ export default {
         navbar: false,
         navbarTime: "",
         dian: 0,
+        isWife:true,
         linkInfo: {
           linkText: "点击输入公众号文章描述",
           linkImg: "https://weiapi.jzzz66.cn/avatar.png",
@@ -192,6 +201,10 @@ export default {
       this.pageData.navbar = value;
       this.status.item2 = value;
     },
+    switchWifeValue(value) {
+      this.pageData.isWifi = value;
+
+    },   
     getFiles(data) {
       this.pageData.article.pictureList = data;
     },

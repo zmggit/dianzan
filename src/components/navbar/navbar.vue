@@ -61,7 +61,8 @@ export default {
       type: Object,
       default: () => ({
         navbarTime: '18:05',
-        dian: 68
+        dian: 68,
+        isWifi: true
       }),
     },
     bgColor: {
@@ -99,7 +100,7 @@ export default {
   width: 100%;
   box-sizing: border-box;
   /* 增加顶部 padding 模拟 iOS 灵动岛/刘海的安全距离 */
-  padding-top: 80rpx; 
+  padding-top: 30rpx; 
   position: relative;
   z-index: 99;
 
@@ -175,6 +176,7 @@ export default {
         .battery-num {
           position: relative;
           z-index: 2;
+          left: -4rpx;
           font-size: 20rpx;
           font-weight: 700;
           transform: scale(0.9); /* 缩小数字使其完美塞入电池 */

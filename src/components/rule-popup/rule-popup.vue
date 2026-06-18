@@ -152,7 +152,7 @@ export default {
   name: "wei-article",
   data() {
     return {
-      isTip: true,
+      isTip: false,
     };
   },
   props: {

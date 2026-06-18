@@ -89,6 +89,7 @@ export default {
         type: 0,
         navbar: false,
         dian: 0,
+        isWifi:true,
         article: {
           username: "",
           avatar: "",
@@ -130,7 +131,7 @@ export default {
     this.domId = "#poster";
   },
   onLoad(options) {
-    this.isRulePopup = true;
+    this.isRulePopup = false;
     if (options.data) {
       this.pageData = JSON.parse(options.data);
       console.log(this.pageData);
@@ -139,6 +140,7 @@ export default {
   methods: {
     handleRight(data) {
       this.coordinate = data;
+      console.log(this.pageData,"nava");
       this.longSelectHidden = !this.longSelectHidden;
     },
     preImg() {
